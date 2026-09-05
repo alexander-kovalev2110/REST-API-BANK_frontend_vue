@@ -1,16 +1,16 @@
 // src/infrastructure/storage/token.storage.ts
-const TOKEN_KEY = "token"
+const TOKEN_KEY = 'token'
 
 export const tokenStorage = {
-  save(token: string) {
+  save (token: string) {
     localStorage.setItem(TOKEN_KEY, token)
   },
 
-  get(): string | null {
+  get (): string | null {
     return localStorage.getItem(TOKEN_KEY)
   },
 
-  clear() {
+  clear () {
     localStorage.removeItem(TOKEN_KEY)
   },
 }

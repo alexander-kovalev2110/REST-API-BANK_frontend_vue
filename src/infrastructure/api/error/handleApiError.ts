@@ -1,14 +1,14 @@
 // src/infrastructure/api/error/handleApiError.ts
-import axios from "axios"
+import axios from 'axios'
 
-export function handleApiError(
+export function handleApiError (
   err: unknown,
-  fallbackMessage: string
+  fallbackMessage: string,
 ): string {
   if (axios.isAxiosError(err)) {
     return (
-      err.response?.data?.error ??
-      fallbackMessage
+      err.response?.data?.error
+      ?? fallbackMessage
     )
   }
 

@@ -1,7 +1,7 @@
 // src/infrastructure/api/trans/axiosInstanceTrans.ts
-import axios from "axios"
-import { API_URL } from "@/config/env"
-import { tokenStorage } from "@/infrastructure/storage"
+import axios from 'axios'
+import { API_URL } from '@/config/env'
+import { tokenStorage } from '@/infrastructure/storage'
 
 export const axiosInstanceTrans = axios.create({
   baseURL: API_URL,
@@ -9,7 +9,7 @@ export const axiosInstanceTrans = axios.create({
 
 // Request interceptor
 axiosInstanceTrans.interceptors.request.use(
-  (config) => {
+  config => {
     const token = tokenStorage.get()
 
     if (token) {
@@ -18,5 +18,5 @@ axiosInstanceTrans.interceptors.request.use(
 
     return config
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error),
 )

@@ -1,2 +1,2 @@
-export * from "./trans.types"
-export * from "./trans.rules"
+export * from './trans.rules'
+export * from './trans.types'

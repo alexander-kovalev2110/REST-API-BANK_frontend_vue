@@ -8,21 +8,22 @@
       {{ username }}
     </div>
 
-    <template v-slot:append>
+    <template #append>
       <v-btn
         v-if="username"
-        variant="outlined"
         color="white"
         prepend-icon="mdi-logout"
+        variant="outlined"
         @click="logout"
       >
         Log out
       </v-btn>
+
       <v-btn
         v-else
-        variant="outlined"
         color="white"
         prepend-icon="mdi-login"
+        variant="outlined"
         @click="openAuthor"
       >
         Log in
@@ -32,19 +33,19 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useStore } from "vuex"
+  import { computed } from 'vue'
+  import { useStore } from 'vuex'
 
-const store = useStore()
-const username = computed(() => store.state.cust.username)
+  const store = useStore()
+  const username = computed(() => store.state.cust.username)
 
-const openAuthor = () => {
-  store.commit("modal/openAuthor")
-}
+  function openAuthor () {
+    store.commit('modal/openAuthor')
+  }
 
-const logout = () => {
-  store.dispatch("cust/logout")
-}
+  function logout () {
+    store.dispatch('cust/logout')
+  }
 </script>
 
 <style scoped>

@@ -1,52 +1,52 @@
+import type { TransactionsResponse } from './trans.types'
 // src/infrastructure/api/trans/trans.api.ts
-import { axiosInstanceTrans } from "./axiosInstanceTrans"
-import type { TransactionsResponse } from "./trans.types"
+import { axiosInstanceTrans } from './axiosInstanceTrans'
 
 export const transApi = {
   // Create transaction
-  async create(amount: number): Promise<TransactionsResponse> {
+  async create (amount: number): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.post<TransactionsResponse>(
-      "/transactions", 
-      { amount }
+      '/transactions',
+      { amount },
     )
     return data
   },
 
   // Get transaction by id
-  async getById(id: string): Promise<TransactionsResponse> {
+  async getById (id: string): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
-      `/transactions/${id}`
+      `/transactions/${id}`,
     )
     return data
   },
 
   // Get transactions by filter
-  async getByFilter(params: { 
+  async getByFilter (params: {
     amount?: number
     date?: string
     page?: number
     limit?: number
   }): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.get<TransactionsResponse>(
-      "/transactions", 
-      { params }
+      '/transactions',
+      { params },
     )
     return data
   },
 
   // Update transaction
-  async update(id: string, amount: number): Promise<TransactionsResponse> {
+  async update (id: string, amount: number): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.patch<TransactionsResponse>(
-      `/transactions/${id}`, 
-      { amount }
+      `/transactions/${id}`,
+      { amount },
     )
     return data
   },
 
   // Delete transaction
-  async remove(id: string): Promise<TransactionsResponse> {
+  async remove (id: string): Promise<TransactionsResponse> {
     const { data } = await axiosInstanceTrans.delete<TransactionsResponse>(
-      `/transactions/${id}`
+      `/transactions/${id}`,
     )
     return data
   },

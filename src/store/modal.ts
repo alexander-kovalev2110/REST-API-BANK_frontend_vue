@@ -1,6 +1,6 @@
-import type { Module } from "vuex"
-import type { RootState } from "./index"
-import { TransAction } from "@/types/ui-actions"
+import type { RootState } from './index'
+import type { TransAction } from '@/types/ui-actions'
+import type { Module } from 'vuex'
 
 export interface ModalState {
   authorOpen: boolean
@@ -16,17 +16,17 @@ const modalModule: Module<ModalState, RootState> = {
     transAction: null,
   }),
   mutations: {
-    openAuthor(state: ModalState) {
+    openAuthor (state: ModalState) {
       state.authorOpen = true
     },
-    closeAuthor(state: ModalState) {
+    closeAuthor (state: ModalState) {
       state.authorOpen = false
     },
-    openTrans(state: ModalState, action: TransAction) {
+    openTrans (state: ModalState, action: TransAction) {
       state.transOpen = true
       state.transAction = action
     },
-    closeTrans(state: ModalState) {
+    closeTrans (state: ModalState) {
       state.transOpen = false
       state.transAction = null
     },

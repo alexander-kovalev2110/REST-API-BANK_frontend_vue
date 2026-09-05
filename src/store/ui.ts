@@ -1,5 +1,5 @@
-import type { Module } from "vuex"
-import type { RootState } from "./index"
+import type { RootState } from './index'
+import type { Module } from 'vuex'
 
 export interface UIState {
   loading: boolean
@@ -13,13 +13,13 @@ const uiModule: Module<UIState, RootState> = {
     error: null,
   }),
   mutations: {
-    setLoading(state: UIState, payload: boolean) {
+    setLoading (state: UIState, payload: boolean) {
       state.loading = payload
     },
-    setError(state: UIState, payload: string | null) {
+    setError (state: UIState, payload: string | null) {
       state.error = payload
     },
-    clearError(state: UIState) {
+    clearError (state: UIState) {
       state.error = null
     },
   },

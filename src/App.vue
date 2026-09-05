@@ -11,6 +11,6 @@
 </template>
 
 <script lang="ts" setup>
-import ErrorDialog from "@/components/widgets/ErrorDialog.vue"
-import LoadingDialog from "@/components/widgets/LoadingDialog.vue"
+  import ErrorDialog from '@/components/widgets/ErrorDialog.vue'
+  import LoadingDialog from '@/components/widgets/LoadingDialog.vue'
 </script>

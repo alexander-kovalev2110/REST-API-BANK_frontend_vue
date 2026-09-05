@@ -6,34 +6,34 @@
     :timeout="6000"
   >
     {{ error }}
-    <template v-slot:actions>
+    <template #actions>
       <v-btn
-        variant="text"
         icon="mdi-close"
+        variant="text"
         @click="close"
-      ></v-btn>
+      />
     </template>
   </v-snackbar>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useStore } from "vuex"
+  import { computed } from 'vue'
+  import { useStore } from 'vuex'
 
-const store = useStore()
+  const store = useStore()
 
-const error = computed(() => store.state.ui.error)
+  const error = computed(() => store.state.ui.error)
 
-const show = computed({
-  get: () => error.value !== null,
-  set: (val) => {
-    if (!val) {
-      close()
-    }
+  const show = computed({
+    get: () => error.value !== null,
+    set: val => {
+      if (!val) {
+        close()
+      }
+    },
+  })
+
+  function close () {
+    store.commit('ui/clearError')
   }
-})
-
-const close = () => {
-  store.commit("ui/clearError")
-}
 </script>

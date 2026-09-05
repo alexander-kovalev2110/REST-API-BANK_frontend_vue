@@ -1,15 +1,15 @@
-import { createStore } from "vuex"
-import uiModule from "./ui"
-import type { UIState } from "./ui"
-import custModule from "./cust"
-import type { CustState } from "./cust"
-import modalModule from "./modal"
-import type { ModalState } from "./modal"
-import transModule from "./trans"
-import type { TransState } from "./trans"
-import { authPlugin } from "./plugins/authPlugin"
-import { tokenStorage } from "@/infrastructure/storage"
-import { jwtDecode } from "jwt-decode"
+import type { CustState } from './cust'
+import type { ModalState } from './modal'
+import type { TransState } from './trans'
+import type { UIState } from './ui'
+import { jwtDecode } from 'jwt-decode'
+import { createStore } from 'vuex'
+import { tokenStorage } from '@/infrastructure/storage'
+import custModule from './cust'
+import modalModule from './modal'
+import { authPlugin } from './plugins/authPlugin'
+import transModule from './trans'
+import uiModule from './ui'
 
 export interface RootState {
   ui: UIState
@@ -25,8 +25,8 @@ if (token) {
   try {
     const decoded = jwtDecode<{ username: string }>(token)
     initialUsername = decoded.username
-  } catch (e) {
-    console.warn("Invalid token found in local storage", e)
+  } catch (error) {
+    console.warn('Invalid token found in local storage', error)
   }
 }
 
@@ -41,6 +41,6 @@ export const store = createStore<RootState>({
 })
 
 if (initialUsername) {
-  store.commit("cust/setUsername", initialUsername)
-  store.dispatch("trans/fetchTransactionsByFilter")
+  store.commit('cust/setUsername', initialUsername)
+  store.dispatch('trans/fetchTransactionsByFilter')
 }

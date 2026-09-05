@@ -2,7 +2,7 @@
   <v-layout class="fill-height">
     <NavBar />
 
-    <v-navigation-drawer permanent width="240" style="z-index: 1004;">
+    <v-navigation-drawer permanent style="z-index: 1004;" width="240">
       <v-list class="mt-16">
         <v-list-item link @click="menuHandler(TransAction.Add)">
           <v-list-item-title>Add Transaction</v-list-item-title>
@@ -34,31 +34,31 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from "vue"
-import { useStore } from "vuex"
-import { useRouter } from "vue-router"
-import { TransAction } from "@/types/ui-actions"
-import NavBar from "@/components/NavBar.vue"
-import TransTable from "@/components/TransTable.vue"
-import TransDialog from "@/components/TransDialog.vue"
+  import { computed, watch } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useStore } from 'vuex'
+  import NavBar from '@/components/NavBar.vue'
+  import TransDialog from '@/components/TransDialog.vue'
+  import TransTable from '@/components/TransTable.vue'
+  import { TransAction } from '@/types/ui-actions'
 
-const store = useStore()
-const router = useRouter()
+  const store = useStore()
+  const router = useRouter()
 
-const username = computed(() => store.state.cust.username)
+  const username = computed(() => store.state.cust.username)
 
-// Redirect to login if user logs out
-watch(
-  username,
-  (newVal) => {
-    if (newVal === null) {
-      router.push("/")
-    }
-  },
-  { immediate: true }
-)
+  // Redirect to login if user logs out
+  watch(
+    username,
+    newVal => {
+      if (newVal === null) {
+        router.push('/')
+      }
+    },
+    { immediate: true },
+  )
 
-const menuHandler = (action: TransAction) => {
-  store.commit("modal/openTrans", action)
-}
+  function menuHandler (action: TransAction) {
+    store.commit('modal/openTrans', action)
+  }
 </script>

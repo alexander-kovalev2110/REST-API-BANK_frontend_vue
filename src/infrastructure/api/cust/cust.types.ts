@@ -1,6 +1,6 @@
-import type { Customer } from "@/domain/cust"
+import type { Customer } from '@/domain/cust'
 
-export type CustRequest = Pick<Customer, "name" | "password">
+export type CustRequest = Pick<Customer, 'name' | 'password'>
 
 export type CustResponse = {
   token: string
