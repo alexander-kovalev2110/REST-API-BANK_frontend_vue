@@ -1,110 +1,228 @@
-# REST-API-BANK Frontend (Vue 3 + Vuetify)
+# Frontend Architecture (Vue 3)
 
-Фронтенд-приложение банковой системы **REST-API-BANK**, разработанное на **Vue 3** с использованием компонента **Vuetify 3**, **TypeScript** и архитектурного паттерна **Clean Architecture / DDD**.
+- **Project description**: [PDF Document](https://github.com/alexander-kovalev2110/full-stack-web-proj_REST-API-BANK/blob/master/PHP-test.pdf)
+- **Swagger (OpenAPI)**: [API Documentation](https://alexander-kovalev2110.github.io/full-stack-web-proj_REST-API-BANK/Swagger-OpenAPI/dist/index.html)
 
----
-
-## 🛠 Технологический стек
-
-- **Core Framework:** [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)
-- **UI Library:** [Vuetify 3](https://vuetifyjs.com/) (Material Design 3)
-- **State Management:** [Vuex 4](https://vuex.vuejs.org/) (Модульная архитектура + Plugins)
-- **Routing:** [Vue Router 4](https://router.vuejs.org/)
-- **HTTP Client:** [Axios](https://axios-http.com/)
-- **Utilities:** `jwt-decode`, `@mdi/font`
-- **Build Tool:** [Vite](https://vitejs.dev/)
-- **Language:** TypeScript
+This project is built with **Vue 3 + Vuetify + Vuex + TypeScript** and follows the principles of a **layered architecture** with a clear separation of responsibilities between application layers.
 
 ---
 
-## ✨ Основные возможности
+## Architectural Principles
 
-1. **Авторизация и управление сессиями:**
-   - Вход (`Login`) и регистрация (`Sign up`) клиентов банка.
-   - Безопасное хранение JWT-токена в `localStorage`.
-   - Автоматическое восстановление пользовательской сессии и раскодирование токена при старте приложения.
-   - Плагин авторизации (`authPlugin`), реактивно синхронизирующий Vuex-стор с локальным хранилищем.
-
-2. **Банковские транзакции (CRUD):**
-   - Просмотр списка транзакций в интерактивной таблице с пагинацией (`TransTable`).
-   - Совершение транзакций (Пополнение, Снятие, Перевод).
-   - Фильтрация транзакций по сумме, дате и другим параметрам.
-   - Редактирование и удаление существующей транзакции через модальные окна (`TransDialog`).
-
-3. **Обработка ошибок и пользовательский опыт (UX):**
-   - Глобальные виджеты состояния: всплывающие диалоги ошибок (`ErrorDialog`) и индикаторы загрузки (`LoadingDialog`).
-   - Автоматические редиректы между экранами авторизации (`/`) и транзакций (`/trans`).
+- **Separation of Concerns** — each layer is responsible for a single, well-defined area
+- **Single Source of Truth** — application state is stored in the Vuex Store
+- **Thin UI / Fat Store** — UI components are minimal, business logic lives outside components
+- **Side Effects Isolation** — side effects are isolated in actions and Vuex plugins
+- **Explicit Data Flow** — unidirectional data flow (UI → store → UI)
+- **Backend-driven contracts** — API types are separated from application state types
 
 ---
 
-## 📁 Структура проекта
+## Application Layers
 
-Код структурирован с разделением ответственности по слоям (Domain, Infrastructure, Presentation, Store):
+### 1. UI Layer (Presentation)
+
+**Purpose:**  
+Rendering the user interface with Vuetify and reacting to user interactions.
+
+**Characteristics:**
+
+- contains no business logic
+- does not communicate with the API directly
+- interacts with the store only via `dispatch`, `commit`, and computed properties
+
+**Examples:**
 
 ```text
-src/
-├── domain/                      # Доменная логика и правила валидации
-│   ├── cust/                   # Бизнес-правила клиентов (валидация при регистрации)
-│   └── trans/                  # Бизнес-правила транзакций
-├── infrastructure/              # Инфраструктурный слой (API, HTTP, Storage)
-│   ├── api/                    # Клиенты Axios и типы DTO
-│   │   ├── cust/               # API авторизации клиентов (/customers/*)
-│   │   ├── trans/              # API транзакций (/transactions/*)
-│   │   └── error/              # Обработка API ошибок
-│   └── storage/                # Работа с localStorage (токены)
-├── store/                       # Хранилище Vuex 4
-│   ├── modules/                # Модули состояния (cust, trans, modal, ui)
-│   └── plugins/                # Плагины Vuex (authPlugin)
-├── components/                  # UI-компоненты Vuetify
-│   ├── widgets/                # Глобальные виджеты (ErrorDialog, LoadingDialog)
-│   ├── AuthorDialog.vue        # Модальное окно авторизации
-│   ├── TransDialog.vue         # Модальное окно транзакций
-│   ├── TransTable.vue          # Таблица транзакций
-│   └── NavBar.vue              # Шапка приложения
-├── views/                       # Страницы (Views)
-│   ├── AuthorPage.vue          # Главная страница входа / авторизации
-│   └── TransPage.vue           # Страница управления транзакциями
-├── router/                      # Конфигурация Vue Router
-├── styles/                      # Настройки стилей и темы Vuetify
-├── App.vue                      # Корневой компонент
-└── main.ts                      # Точка входа в приложение
+src/components/
+  NavBar.vue
+  AuthorDialog.vue
+  TransDialog.vue
+  TransTable.vue
+src/views/
+  AuthorPage.vue
+  TransPage.vue
 ```
 
 ---
 
-## 🚀 Быстрый старт
+### 2. UI State Layer (Global UI)
 
-### Требования
-- **Node.js** версии 18+
-- **npm** версии 9+
+**Purpose:**  
+Managing global UI-related state shared across the entire application.
 
-### 1. Установка зависимостей
-```bash
-npm install
+**Responsibilities:**
+
+- global loading indicator
+- centralized error handling
+- dialog / notification-based error display (`ErrorDialog`, `LoadingDialog`)
+- cross-feature UI behavior
+
+**Characteristics:**
+
+- contains no business logic
+- independent from specific feature domains
+- reacts to async lifecycle events (`loading / error`)
+- implemented via Vuex `ui` module
+
+**Example:**
+
+```text
+src/store/ui.ts
+src/components/widgets/
+  ErrorDialog.vue
+  LoadingDialog.vue
 ```
-
-### 2. Настройка переменных окружения
-Создайте или отредактируйте файл `.env` в корне проекта:
-```env
-VITE_APP_API_URL=http://localhost:8000
-```
-
-### 3. Запуск в режиме разработки
-```bash
-npm run dev
-```
-Приложение будет доступно по адресу: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🧪 Доступные скрипты
+### 3. Store Layer (State Management)
 
-В [package.json](file:///d:/KA/tests/github/REST-API-BANK_frontend_vue/package.json) доступны следующие команды:
+**Purpose:**  
+Managing application state and business logic using Vuex 4.
 
-- **`npm run dev`** — Запуск локального сервера разработки (Vite).
-- **`npm run type-check`** — Проверка типов TypeScript и Vue (через `vue-tsc`).
-- **`npm run build`** — Проверка типов и сборка продакшен-бандла в директорию `dist`.
-- **`npm run build-only`** — Сборка проекта без предварительной проверки типов.
-- **`npm run preview`** — Локальный запуск и просмотр собранного продакшен-бандла.
-- **`npm run lint`** — Проверка кода с помощью ESLint.
-- **`npm run lint:fix`** — Автоматическое исправление ошибок линтера.
+**Composition:**
+
+- `state` — reactive state description
+- `mutations` — synchronous state changes
+- `actions` — asynchronous operations (API requests)
+- `plugins` — reactions to events (login/logout, resets, cascade effects)
+
+**Example structure:**
+
+```text
+src/store/
+  cust.ts
+  trans.ts
+  modal.ts
+  ui.ts
+  plugins/
+    authPlugin.ts
+```
+
+---
+
+### 4. API Layer (Data Access)
+
+**Purpose:**  
+Encapsulation of HTTP requests (Axios) and backend contracts.
+
+**Principles:**
+
+- API layer is completely unaware of Vuex
+- returns raw backend responses
+- uses its own Request / Response types
+
+**Example:**
+
+```text
+src/infrastructure/api/
+  cust/
+    cust.api.ts
+    cust.types.ts
+  trans/
+    trans.api.ts
+    trans.types.ts
+```
+
+---
+
+### 5. Domain / State Types
+
+**Purpose:**  
+Describing domain rules, validation, and internal data structures.
+
+**Difference from API types:**
+
+- API types — backend data format
+- Store types — internal application data format
+
+This separation allows:
+
+- safe backend evolution
+- centralized data transformation
+- stable internal domain model
+
+```text
+src/domain/
+  cust/
+    cust.rules.ts
+    cust.types.ts
+  trans/
+    trans.rules.ts
+    trans.types.ts
+```
+
+---
+
+### 6. Side Effects & Cross-cutting Logic
+
+**Vuex Plugin (`authPlugin.ts`) is used for:**
+
+- interacting with `localStorage`
+- decoding JWT tokens
+- cascading effects (resetting related state)
+- logic that does not belong to any single module
+
+👉 **Actions do not know about `localStorage` or global side effects.**
+
+---
+
+## Data Flow Example (Login)
+
+```text
+UI
+ ↓ dispatch("cust/login", payload)
+Action
+ ↓
+Domain (rules / API call)
+ ↓ 
+commit("loginSuccess", token)
+ ↓
+Vuex Plugin (authPlugin)
+ ├─ save token to localStorage
+ ├─ decode username -> commit("cust/setUsername", username)
+ └─ reset dependent state -> commit("trans/resetTrans")
+ ↓
+custModule State (username updated)
+ ↓
+UI re-render
+```
+
+---
+
+## Available Scripts
+
+### Development & Build
+
+* **Start dev server:**
+  ```bash
+  npm run dev
+  ```
+
+* **Type-check TypeScript:**
+  ```bash
+  npm run type-check
+  ```
+
+* **Build for production:**
+  ```bash
+  npm run build
+  ```
+
+* **Lint code:**
+  ```bash
+  npm run lint
+  ```
+
+### Testing
+
+* **Run unit tests once:**
+  ```bash
+  npm run test:unit
+  ```
+
+* **Run unit tests in watch mode:**
+  ```bash
+  npm run test:watch
+  ```
